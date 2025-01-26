@@ -1,7 +1,7 @@
 package it.fulminazzo.chatapp.backend.security.controllers;
 
 import it.fulminazzo.chatapp.backend.security.objects.LoginRequest;
-import it.fulminazzo.chatapp.backend.security.services.AuthenticationService;
+import it.fulminazzo.chatapp.backend.security.services.IAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthenticationService authenticationService;
+    private final IAuthenticationService authenticationService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
