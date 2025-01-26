@@ -1,5 +1,6 @@
 package it.fulminazzo.chatapp.backend.security.controllers;
 
+import it.fulminazzo.chatapp.backend.security.objects.LoginRequest;
 import it.fulminazzo.chatapp.backend.security.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
