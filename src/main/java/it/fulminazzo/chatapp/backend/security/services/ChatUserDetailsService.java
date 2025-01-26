@@ -1,8 +1,8 @@
-package it.fulminazzo.chatapp.backend.security;
+package it.fulminazzo.chatapp.backend.security.services;
 
 import it.fulminazzo.chatapp.backend.domain.entities.User;
 import it.fulminazzo.chatapp.backend.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
+import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

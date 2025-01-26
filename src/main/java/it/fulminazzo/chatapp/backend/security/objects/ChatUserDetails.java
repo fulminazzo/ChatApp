@@ -1,4 +1,4 @@
-package it.fulminazzo.chatapp.backend.security;
+package it.fulminazzo.chatapp.backend.security.objects;
 
 import it.fulminazzo.chatapp.backend.domain.entities.User;
 import org.springframework.security.core.GrantedAuthority;
