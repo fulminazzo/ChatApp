@@ -37,7 +37,7 @@ class AuthControllerIntegrationTest extends Specification {
 
         when:
         def actual = mockMvc.perform(
-                MockMvcRequestBuilders.post('/login')
+                MockMvcRequestBuilders.post('/api/v1/auth/login')
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
         )
