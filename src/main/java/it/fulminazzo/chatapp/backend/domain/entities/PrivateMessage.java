@@ -19,7 +19,8 @@ public class PrivateMessage {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", nullable = false)
     private PrivateChat chat;
 
     @OneToOne(mappedBy = "id")

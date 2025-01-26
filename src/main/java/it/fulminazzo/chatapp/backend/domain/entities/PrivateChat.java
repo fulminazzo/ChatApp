@@ -3,6 +3,8 @@ package it.fulminazzo.chatapp.backend.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,12 +20,15 @@ public class PrivateChat {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "id")
     @JoinColumn(name = "first_user_id")
     private User firstUser;
 
-    @OneToOne(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "id")
     @JoinColumn(name = "second_user_id")
     private User secondUser;
+
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    private List<PrivateMessage> messages = new ArrayList<>();
 
 }
