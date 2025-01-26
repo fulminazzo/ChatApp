@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 //@RequiredArgsConstructor
-public class ChatUserDetailsService implements UserDetailsService {
+class ChatUserDetailsService implements IChatUserDetailsService {
     private final UserRepository userRepository;
 
     //TODO: temporary
