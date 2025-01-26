@@ -20,15 +20,16 @@ public class PrivateChat {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(mappedBy = "id")
-    @JoinColumn(name = "first_user_id")
+    @OneToOne
+    @JoinColumn(name = "first_user_id", nullable = false)
     private User firstUser;
 
-    @OneToOne(mappedBy = "id")
-    @JoinColumn(name = "second_user_id")
+    @OneToOne
+    @JoinColumn(name = "second_user_id", nullable = false)
     private User secondUser;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_id", nullable = false)
     private List<PrivateMessage> messages = new ArrayList<>();
 
 }

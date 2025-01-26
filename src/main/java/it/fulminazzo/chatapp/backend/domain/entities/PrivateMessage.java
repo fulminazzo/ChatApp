@@ -20,13 +20,15 @@ public class PrivateMessage {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "chat_id", nullable = false)
     private PrivateChat chat;
 
-    @OneToOne(mappedBy = "id")
+    @OneToOne
+    @JoinColumn(name = "first_user_id", nullable = false)
     private User from;
 
-    @OneToOne(mappedBy = "id")
+    @OneToOne
+    @JoinColumn(name = "second_user_id", nullable = false)
     private User to;
 
     @Column(nullable = false)
