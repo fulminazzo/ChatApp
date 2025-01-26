@@ -27,7 +27,7 @@ class AuthControllerIntegrationTest extends Specification {
     void setup() {
         this.objectMapper = new ObjectMapper()
         this.controller = new AuthController(service)
-        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
     def 'test that login of valid user returns ok'() {
