@@ -1,8 +1,10 @@
 package it.fulminazzo.chatapp.backend.security.utils;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import it.fulminazzo.chatapp.backend.security.config.JwtKeyConfig;
+import it.fulminazzo.chatapp.backend.security.exceptions.InvalidJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +18,17 @@ public class JwtProvider {
 
     private final JwtKeyConfig jwtKeyConfig;
 
-    public String extractUsernameFromJwtToken(String token) throws JwtException, IllegalArgumentException {
-        return Jwts.parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+    public String extractUsernameFromJwtToken(String token) throws InvalidJwtException {
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSecretKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidJwtException();
+        }
     }
 
     public SecretKey getSecretKey() {
