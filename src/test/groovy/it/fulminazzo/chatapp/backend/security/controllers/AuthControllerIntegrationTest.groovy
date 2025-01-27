@@ -27,6 +27,7 @@ class AuthControllerIntegrationTest extends Specification {
     void setup() {
         this.objectMapper = new ObjectMapper()
         this.controller = new AuthController(service)
+        service.register('fulminazzo', 'password')
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
