@@ -11,4 +11,6 @@ public interface IAuthenticationService {
 
     UserDetails validateToken(String token) throws InvalidJwtException;
 
+    String generateToken(UserDetails userDetails);
+
 }

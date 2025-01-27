@@ -36,4 +36,9 @@ class AuthenticationService implements IAuthenticationService {
         return userDetailsService.loadUserByUsername(username);
     }
 
+    @Override
+    public String generateToken(UserDetails userDetails) {
+        return jwtProvider.generateJwtTokenFromUsername(userDetails.getUsername());
+    }
+
 }
