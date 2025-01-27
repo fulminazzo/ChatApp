@@ -19,6 +19,21 @@ class JwtProviderTest extends Specification {
         provider = new JwtProvider(config)
     }
 
+    def 'test token generation'() {
+        given:
+        def token = provider.generateJwtTokenFromUsername('fulminazzo')
+
+        when:
+        def subject = Jwts.parser()
+                .verifyWith(provider.secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload.getSubject()
+
+        then:
+        subject == 'fulminazzo'
+    }
+
     def 'test that username extraction from jwt is successful'() {
         given:
         def token = generateToken()
