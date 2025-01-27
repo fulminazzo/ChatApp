@@ -3,12 +3,16 @@ package it.fulminazzo.chatapp.backend.security.services
 import it.fulminazzo.chatapp.backend.domain.entities.User
 import it.fulminazzo.chatapp.backend.repositories.UserRepository
 import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails
+import jakarta.persistence.EntityExistsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
 class ChatUserDetailsServiceTest extends Specification {
-    private def user
+    private User user
+    private UserRepository userRepository
+    private PasswordEncoder encoder
     private ChatUserDetailsService service
 
     void setup() {
@@ -17,10 +21,41 @@ class ChatUserDetailsServiceTest extends Specification {
                 .username('fulminazzo')
                 .password('password')
                 .build()
-        UserRepository userRepository = Mock()
+        userRepository = Mock()
+        userRepository.save(_) >> _
         userRepository.findByUsername(user.username) >> Optional.of(user)
         userRepository.findByUsername(_) >> Optional.empty()
-        service = new ChatUserDetailsService(userRepository, new BCryptPasswordEncoder())
+        encoder = new BCryptPasswordEncoder()
+        service = new ChatUserDetailsService(userRepository, encoder)
+    }
+
+    def 'valid create user should call save from repository'() {
+        given:
+        def username = 'fulminazzobestfriend'
+        def password = user.password
+
+        when:
+        def result = service.createUser(username, password)
+
+        then:
+        result.username == username
+        result.password == encoder.encode(password)
+        userRepository.save(User.builder()
+                .username(username)
+                .password(encoder.encode(password))
+                .build()) * 1
+    }
+
+    def 'create user of already existing should throw exception'() {
+        given:
+        def username = user.username
+
+        when:
+        service.createUser(username, user.password)
+
+        then:
+        def e = thrown(EntityExistsException)
+        e.message.contains(username)
     }
 
     def 'found user should return correct user details'() {
