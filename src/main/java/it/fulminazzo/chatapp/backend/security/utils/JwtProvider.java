@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import it.fulminazzo.chatapp.backend.security.config.JwtKeyConfig;
 import it.fulminazzo.chatapp.backend.security.exceptions.InvalidJwtException;
+import it.fulminazzo.chatapp.structures.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,14 +32,16 @@ public class JwtProvider {
         }
     }
 
-    public String generateJwtTokenFromUsername(String username) {
+    public Tuple<String, Long> generateJwtTokenFromUsername(String username) {
         long now = System.currentTimeMillis();
-        return Jwts.builder()
+        long expirationDate = jwtKeyConfig.getExpirationDate();
+        String token = Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date(now))
-                .expiration(new Date(now + jwtKeyConfig.getExpirationDate()))
+                .expiration(new Date(now + expirationDate))
                 .signWith(getSecretKey())
                 .compact();
+        return new Tuple<>(token, expirationDate);
     }
 
     public SecretKey getSecretKey() {

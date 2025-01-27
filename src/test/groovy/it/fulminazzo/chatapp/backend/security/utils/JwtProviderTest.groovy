@@ -8,6 +8,7 @@ import spock.lang.Specification
 class JwtProviderTest extends Specification {
 
     private static final SECRET_KEY = 'SGVsbG8sIHdvcmxkISBUaGlzIGlzIGEgc3VwZXIgc2VjdXJlIG1lc3NhZ2UgdGhhdCBub2JvZHkgd2lsbCBiZSBhYmxlIHRvIGRlY29kZS4KVW5sZXNzIHlvdSBleHBsaWNpdGx5IHdhbnQgdG8gZ2V0IGhhY2tlZCwgeW91IHNob3VsZCBjaGFuZ2UgdGhpcyBrZXkgaW1tZWRpYXRlbHkuClBsZWFzZSwgRE8gTk9UIFVTRSBNRSBJTiBQUk9EVUNUSU9OLiBFVkVSLg'
+    private static final EXPIRATION_DATE = 86400
 
     private JwtProvider provider
 
@@ -15,7 +16,7 @@ class JwtProviderTest extends Specification {
         JwtKeyConfig config = Mock()
         config.algorithm >> 'HmacSHA256'
         config.secretKey >> SECRET_KEY
-        config.expirationDate >> 86400
+        config.expirationDate >> EXPIRATION_DATE
         provider = new JwtProvider(config)
     }
 
@@ -27,10 +28,11 @@ class JwtProviderTest extends Specification {
         def subject = Jwts.parser()
                 .verifyWith(provider.secretKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(token.first())
                 .payload.getSubject()
 
         then:
+        token.second() == EXPIRATION_DATE
         subject == 'fulminazzo'
     }
 
