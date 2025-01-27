@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JwtKeyConfig {
+
+    private String algorithm;
+
     private String secretKey;
+
+    private long expirationDate;
 
 }
