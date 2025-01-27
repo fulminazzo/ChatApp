@@ -24,7 +24,7 @@ public class AuthController {
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
         );
-        return new ResponseEntity<>(userDetails, HttpStatus.OK);
+        return new ResponseEntity<>(authenticationService.generateToken(userDetails), HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -33,7 +33,7 @@ public class AuthController {
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
         );
-        return new ResponseEntity<>(userDetails, HttpStatus.OK);
+        return new ResponseEntity<>(authenticationService.generateToken(userDetails), HttpStatus.OK);
     }
 
 }
