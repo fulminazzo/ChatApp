@@ -2,8 +2,8 @@ package it.fulminazzo.chatapp.backend.security.services
 
 import it.fulminazzo.chatapp.backend.domain.entities.User
 import it.fulminazzo.chatapp.backend.repositories.UserRepository
+import it.fulminazzo.chatapp.backend.security.exceptions.UserAlreadyRegisteredException
 import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails
-import jakarta.persistence.EntityExistsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -50,7 +50,7 @@ class ChatUserDetailsServiceTest extends Specification {
         service.createUser(username, user.password)
 
         then:
-        def e = thrown(EntityExistsException)
+        def e = thrown(UserAlreadyRegisteredException)
         e.message.contains(username)
     }
 

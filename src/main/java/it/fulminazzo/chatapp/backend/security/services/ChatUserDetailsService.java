@@ -2,8 +2,8 @@ package it.fulminazzo.chatapp.backend.security.services;
 
 import it.fulminazzo.chatapp.backend.domain.entities.User;
 import it.fulminazzo.chatapp.backend.repositories.UserRepository;
+import it.fulminazzo.chatapp.backend.security.exceptions.UserAlreadyRegisteredException;
 import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails;
-import jakarta.persistence.EntityExistsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +29,7 @@ class ChatUserDetailsService implements IChatUserDetailsService {
     @Override
     public UserDetails createUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent())
-            throw new EntityExistsException("Username already exists with username: " + username);
+            throw new UserAlreadyRegisteredException(username);
         else return new ChatUserDetails(userRepository.save(User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
