@@ -1,7 +1,9 @@
 package it.fulminazzo.chatapp.backend.security.services;
 
 import it.fulminazzo.chatapp.backend.security.exceptions.InvalidJwtException;
+import it.fulminazzo.chatapp.backend.security.objects.AuthResponse;
 import it.fulminazzo.chatapp.backend.security.utils.JwtProvider;
+import it.fulminazzo.chatapp.structures.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,8 +39,9 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return jwtProvider.generateJwtTokenFromUsername(userDetails.getUsername());
+    public AuthResponse generateToken(UserDetails userDetails) {
+        Tuple<String, Long> tokenData = jwtProvider.generateJwtTokenFromUsername(userDetails.getUsername());
+        return AuthResponse.fromTuple(tokenData);
     }
 
 }

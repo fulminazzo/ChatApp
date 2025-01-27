@@ -1,6 +1,7 @@
 package it.fulminazzo.chatapp.backend.security.services;
 
 import it.fulminazzo.chatapp.backend.security.exceptions.InvalidJwtException;
+import it.fulminazzo.chatapp.backend.security.objects.AuthResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface IAuthenticationService {
@@ -11,6 +12,6 @@ public interface IAuthenticationService {
 
     UserDetails validateToken(String token) throws InvalidJwtException;
 
-    String generateToken(UserDetails userDetails);
+    AuthResponse generateToken(UserDetails userDetails);
 
 }
