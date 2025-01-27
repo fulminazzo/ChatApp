@@ -3,6 +3,7 @@ package it.fulminazzo.chatapp.backend.security.services;
 import it.fulminazzo.chatapp.backend.domain.entities.User;
 import it.fulminazzo.chatapp.backend.repositories.UserRepository;
 import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,13 +13,26 @@ import org.springframework.stereotype.Service;
 //@RequiredArgsConstructor
 class ChatUserDetailsService implements IChatUserDetailsService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //TODO: temporary
     public ChatUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         userRepository.findByUsername("fulminazzo").orElseGet(() -> userRepository.save(User.builder()
                 .username("fulminazzo")
                 .password(passwordEncoder.encode("password"))
+                .build()
+        ));
+    }
+
+    @Override
+    public UserDetails createUser(String username, String password) {
+        if (userRepository.findByUsername(username).isPresent())
+            throw new EntityExistsException("Username already exists with username: " + username);
+        else return new ChatUserDetails(userRepository.save(User.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
                 .build()
         ));
     }
