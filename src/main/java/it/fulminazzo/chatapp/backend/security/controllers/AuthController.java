@@ -27,4 +27,13 @@ public class AuthController {
         return new ResponseEntity<>(userDetails, HttpStatus.OK);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody LoginRequest loginRequest) {
+        UserDetails userDetails = authenticationService.register(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+        );
+        return new ResponseEntity<>(userDetails, HttpStatus.OK);
+    }
+
 }
