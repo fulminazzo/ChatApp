@@ -16,7 +16,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    public static final String ALGORITHM = "HmacSHA256";
     private final JwtKeyConfig jwtKeyConfig;
 
     public String extractUsernameFromJwtToken(String token) throws InvalidJwtException {
@@ -33,17 +32,18 @@ public class JwtProvider {
     }
 
     public String generateJwtTokenFromUsername(String username) {
+        long now = System.currentTimeMillis();
         return Jwts.builder()
                 .subject(username)
-                .issuedAt(new Date())
-                .expiration(null)
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + jwtKeyConfig.getExpirationDate()))
                 .signWith(getSecretKey())
                 .compact();
     }
 
     public SecretKey getSecretKey() {
         byte[] keyBytes = Base64.getDecoder().decode(jwtKeyConfig.getSecretKey());
-        return new SecretKeySpec(keyBytes, ALGORITHM);
+        return new SecretKeySpec(keyBytes, jwtKeyConfig.getAlgorithm());
     }
 
 }
