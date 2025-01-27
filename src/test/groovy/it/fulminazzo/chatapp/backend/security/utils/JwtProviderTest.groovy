@@ -13,7 +13,9 @@ class JwtProviderTest extends Specification {
 
     void setup() {
         JwtKeyConfig config = Mock()
+        config.algorithm >> 'HmacSHA256'
         config.secretKey >> SECRET_KEY
+        config.expirationDate >> 86400
         provider = new JwtProvider(config)
     }
 
