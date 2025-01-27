@@ -24,7 +24,7 @@ class ChatUserDetailsServiceTest extends Specification {
         userRepository = Mock()
         userRepository.save(_ as User) >> { User u -> u }
         userRepository.findByUsername(user.username) >> Optional.of(user)
-        userRepository.findByUsername(_) >> Optional.empty()
+        userRepository.findByUsername(_ as String) >> Optional.empty()
         encoder = new BCryptPasswordEncoder()
         service = new ChatUserDetailsService(userRepository, encoder)
     }
