@@ -22,19 +22,10 @@ class ChatUserDetailsServiceTest extends Specification {
                 .password('password')
                 .build()
         userRepository = Mock()
-        userRepository.save(_ as User) >> { User u -> u }
         userRepository.findByUsername(user.username) >> Optional.of(user)
         userRepository.findByUsername(_ as String) >> Optional.empty()
         encoder = new BCryptPasswordEncoder()
         service = new ChatUserDetailsService(userRepository, encoder)
-    }
-
-    def 'test mocked save works as expected'() {
-        when:
-        def u = userRepository.save(user)
-
-        then:
-        u == user
     }
 
     def 'valid create user should call save from repository'() {
@@ -44,15 +35,11 @@ class ChatUserDetailsServiceTest extends Specification {
 
         when:
         def result = service.createUser(username, password)
-        println result
 
         then:
         result.username == username
-        result.password == encoder.encode(password)
-        1 * userRepository.save(User.builder()
-                .username(username)
-                .password(encoder.encode(password))
-                .build())
+        new BCryptPasswordEncoder().matches(password, result.password)
+        1 * userRepository.save(_ as User) >> { User u -> u }
     }
 
     def 'create user of already existing should throw exception'() {
