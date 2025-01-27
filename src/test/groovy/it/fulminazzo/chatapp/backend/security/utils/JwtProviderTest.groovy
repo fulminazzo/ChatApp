@@ -18,6 +18,17 @@ class JwtProviderTest extends Specification {
         provider = new JwtProvider(config)
     }
 
+    def 'test that username extraction from jwt is successful'() {
+        given:
+        def token = generateToken()
+
+        when:
+        def username = provider.extractUsernameFromJwtToken(token)
+
+        then:
+        username == 'fulminazzo'
+    }
+
     private String generateToken() {
         return Jwts.builder()
                 .subject('fulminazzo')
