@@ -30,6 +30,24 @@ class AuthControllerIntegrationTest extends Specification {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
+    def 'test that register of valid user returns ok'() {
+        given:
+        def request = new LoginRequest('fulminazzo1', 'password')
+        def json = objectMapper.writeValueAsString(request)
+
+        when:
+        def actual = mockMvc.perform(
+                MockMvcRequestBuilders.post('/api/v1/auth/register')
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+
+        then:
+        actual.andExpect(
+                MockMvcResultMatchers.status().isOk()
+        )
+    }
+
     def 'test that login of valid user returns ok'() {
         given:
         def request = new LoginRequest('fulminazzo', 'password')
