@@ -6,4 +6,6 @@ public interface IAuthenticationService {
 
     UserDetails authenticate(String username, String password);
 
+    UserDetails register(String username, String password);
+
 }
