@@ -4,6 +4,7 @@ import it.fulminazzo.chatapp.backend.domain.entities.User
 import it.fulminazzo.chatapp.backend.repositories.UserRepository
 import it.fulminazzo.chatapp.backend.security.objects.ChatUserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import spock.lang.Specification
 
 class ChatUserDetailsServiceTest extends Specification {
@@ -19,7 +20,7 @@ class ChatUserDetailsServiceTest extends Specification {
         UserRepository userRepository = Mock()
         userRepository.findByUsername(user.username) >> Optional.of(user)
         userRepository.findByUsername(_) >> Optional.empty()
-        service = new ChatUserDetailsService(userRepository)
+        service = new ChatUserDetailsService(userRepository, new BCryptPasswordEncoder())
     }
 
     def 'found user should return correct user details'() {
