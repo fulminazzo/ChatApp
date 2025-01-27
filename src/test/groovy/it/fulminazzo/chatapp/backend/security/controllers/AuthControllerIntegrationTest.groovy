@@ -1,6 +1,7 @@
 package it.fulminazzo.chatapp.backend.security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import it.fulminazzo.chatapp.backend.security.exceptions.UserAlreadyRegisteredException
 import it.fulminazzo.chatapp.backend.security.objects.LoginRequest
 import it.fulminazzo.chatapp.backend.security.services.IAuthenticationService
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +28,9 @@ class AuthControllerIntegrationTest extends Specification {
     void setup() {
         this.objectMapper = new ObjectMapper()
         this.controller = new AuthController(service)
-        service.register('fulminazzo', 'password')
+        try {
+            service.register('fulminazzo', 'password')
+        } catch (UserAlreadyRegisteredException ignored) {}
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
