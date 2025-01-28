@@ -45,6 +45,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'com.h2database:h2'
 
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
     // spock
     implementation platform('org.apache.groovy:groovy-bom')
     implementation 'org.apache.groovy:groovy'
