@@ -8,6 +8,7 @@ import it.fulminazzo.chatapp.api.v1.repositories.PrivateChatRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
 class PrivateChatServiceTest extends Specification {
@@ -70,6 +71,22 @@ class PrivateChatServiceTest extends Specification {
         first          | second
         USER           | generateUser()
         generateUser() | USER
+    }
+
+    def 'test find one by user of third user should throw exception'() {
+        given:
+        def chat = generateChat(generateUser(), generateUser())
+
+        and:
+        userService.findUserByIdOrThrow(USER.id) >> USER
+        chatRepository.findById(chat.id) >> Optional.of(chat)
+
+        when:
+        chatService.findOneByUser(USER.id, chat.id)
+
+        then:
+        def e = thrown(HttpException)
+        e.httpStatus == HttpStatus.FORBIDDEN
     }
 
     def 'test create private chat with chat already existing should throw exception'() {
