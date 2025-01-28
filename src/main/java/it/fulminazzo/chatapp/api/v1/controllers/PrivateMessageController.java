@@ -1,6 +1,6 @@
 package it.fulminazzo.chatapp.api.v1.controllers;
 
-import it.fulminazzo.chatapp.api.v1.services.PrivateMessageService;
+import it.fulminazzo.chatapp.api.v1.services.IPrivateMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PrivateMessageController {
 
-    private final PrivateMessageService messageService;
+    private final IPrivateMessageService messageService;
 
 }

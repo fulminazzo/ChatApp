@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PrivateMessageService implements IPrivateMessageService {
+class PrivateMessageService implements IPrivateMessageService {
 
     private final PrivateMessageRepository messageRepository;
 
