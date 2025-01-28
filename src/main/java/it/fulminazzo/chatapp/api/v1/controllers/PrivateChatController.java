@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/chats")
+@RequestMapping("/api/v1/private/chats")
 @RequiredArgsConstructor
 public class PrivateChatController {
 
