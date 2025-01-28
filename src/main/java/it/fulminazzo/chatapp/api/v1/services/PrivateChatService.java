@@ -20,7 +20,7 @@ class PrivateChatService implements IPrivateChatService {
 
     private final PrivateChatRepository chatRepository;
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @Override
     public List<PrivateChatDto> findByUser(UUID userId, Pageable pageable) {
