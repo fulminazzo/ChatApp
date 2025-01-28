@@ -10,6 +10,8 @@ public interface IPrivateChatService {
 
     List<PrivateChatDto> findByUser(UUID userId, Pageable pageable);
 
+    PrivateChatDto findOneByUser(UUID userId, UUID chatId);
+
     PrivateChatDto createChat(UUID userId, String otherUserUsername);
 
 }
