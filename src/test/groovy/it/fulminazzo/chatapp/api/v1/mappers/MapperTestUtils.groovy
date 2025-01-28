@@ -42,6 +42,17 @@ final class MapperTestUtils {
                 .build()
     }
 
+    static PrivateMessage privateMessage(PrivateChat privateChat, User from, User to) {
+        return PrivateMessage.builder()
+                .id(UUID.randomUUID())
+                .chat(privateChat)
+                .from(from)
+                .to(to)
+                .timestamp(LocalDateTime.now())
+                .content('Hello, World!')
+                .build()
+    }
+
     static UserDto firstUserDto() {
         return new UserDto(UUID.randomUUID(), 'fulminazzo')
     }
