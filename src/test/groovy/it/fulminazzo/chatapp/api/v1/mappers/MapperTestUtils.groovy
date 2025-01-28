@@ -67,7 +67,7 @@ final class MapperTestUtils {
     }
 
     static PrivateMessageDto privateMessageDto(UserDto fromDto, UserDto toDto) {
-        return new PrivateMessageDto(fromDto, toDto, LocalDateTime.now(), 'Hello, World!')
+        return new PrivateMessageDto(UUID.randomUUID(), fromDto, toDto, LocalDateTime.now(), 'Hello, World!')
     }
 
 }
