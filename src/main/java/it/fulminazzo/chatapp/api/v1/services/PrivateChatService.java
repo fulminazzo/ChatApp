@@ -1,11 +1,14 @@
 package it.fulminazzo.chatapp.api.v1.services;
 
 import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateChatDto;
+import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateChat;
 import it.fulminazzo.chatapp.api.v1.domain.entities.User;
+import it.fulminazzo.chatapp.api.v1.exceptions.HttpException;
 import it.fulminazzo.chatapp.api.v1.mappers.PrivateChatMapper;
 import it.fulminazzo.chatapp.api.v1.repositories.PrivateChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +28,19 @@ class PrivateChatService implements IPrivateChatService {
         return chatRepository.findAllByFirstUserOrSecondUser(user, user, pageable).stream()
                 .map(PrivateChatMapper.INSTANCE::privateChatToPrivateChatDto)
                 .toList();
+    }
+
+    @Override
+    public PrivateChatDto createChat(UUID userId, String otherUserUsername) {
+        User user = userService.findUserByIdOrThrow(userId);
+        User otherUser = userService.findUserByUsernameOrThrow(otherUserUsername);
+        if (chatRepository.findByFirstUserAndSecondUser(user, otherUser).isPresent() ||
+                chatRepository.findByFirstUserAndSecondUser(otherUser, user).isPresent())
+            throw new HttpException(HttpStatus.CONFLICT, String.format("Chat with user '%s' already exists", otherUserUsername));
+        return PrivateChatMapper.INSTANCE.privateChatToPrivateChatDto(chatRepository.save(PrivateChat.builder()
+                .firstUser(user)
+                .secondUser(otherUser)
+                .build()));
     }
 
 }
