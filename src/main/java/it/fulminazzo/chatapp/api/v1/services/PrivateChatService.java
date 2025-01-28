@@ -33,11 +33,15 @@ class PrivateChatService implements IPrivateChatService {
     @Override
     public PrivateChatDto findOneByUser(UUID userId, UUID chatId) {
         User user = userService.findUserByIdOrThrow(userId);
-        PrivateChat privateChat = chatRepository.findById(chatId).orElseThrow(() ->
-                new HttpException(HttpStatus.NOT_FOUND, "Could not find chat with id " + chatId));
+        PrivateChat privateChat = findChatByIdOrThrow(chatId);
         if (privateChat.getFirstUser().equals(user) || privateChat.getSecondUser().equals(user))
             return PrivateChatMapper.INSTANCE.privateChatToPrivateChatDto(privateChat);
         else throw new HttpException(HttpStatus.FORBIDDEN);
+    }
+
+    public PrivateChat findChatByIdOrThrow(UUID chatId) {
+        return chatRepository.findById(chatId).orElseThrow(() ->
+                new HttpException(HttpStatus.NOT_FOUND, "Could not find chat with id " + chatId));
     }
 
     @Override
