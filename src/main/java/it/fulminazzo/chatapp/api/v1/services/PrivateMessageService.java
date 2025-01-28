@@ -2,6 +2,7 @@ package it.fulminazzo.chatapp.api.v1.services;
 
 import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateChatDto;
 import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateMessageDto;
+import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateChat;
 import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateMessage;
 import it.fulminazzo.chatapp.api.v1.mappers.PrivateChatMapper;
 import it.fulminazzo.chatapp.api.v1.mappers.PrivateMessageMapper;
@@ -24,11 +25,8 @@ class PrivateMessageService implements IPrivateMessageService {
 
     @Override
     public List<PrivateMessageDto> findByUserAndChat(UUID userId, UUID chatId, Pageable pageable) {
-        PrivateChatDto chatDto = privateChatService.findOneByUser(userId, chatId);
-        List<PrivateMessage> messages = messageRepository.findAllByChat(
-                PrivateChatMapper.INSTANCE.privateChatDtoToPrivateChat(chatDto),
-                pageable
-        );
+        PrivateChat chat = privateChatService.findOneByUser(userId, chatId);
+        List<PrivateMessage> messages = messageRepository.findAllByChat(chat, pageable);
         return messages.stream()
                 .map(PrivateMessageMapper.INSTANCE::privateMessageToPrivateMessageDto)
                 .toList();
