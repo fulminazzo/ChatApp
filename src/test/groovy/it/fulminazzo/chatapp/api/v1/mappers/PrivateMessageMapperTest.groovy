@@ -29,4 +29,28 @@ class PrivateMessageMapperTest extends Specification {
         privateMessageDto.content == privateMessage.content
     }
 
+    def 'test that mapper correctly maps private message dto to private message'() {
+        given:
+        def fromDto = MapperTestUtils.firstUserDto()
+
+        and:
+        def toDto = MapperTestUtils.secondUserDto()
+
+        and:
+        def privateMessage = MapperTestUtils.privateMessageDto(
+                fromDto, toDto
+        )
+
+        when:
+        def privateMessageDto = PrivateMessageMapper.INSTANCE.privateMessageDtoToPrivateMessage(privateMessage)
+
+        then:
+        privateMessageDto.from.id == fromDto.id
+        privateMessageDto.from.username == fromDto.username
+        privateMessageDto.to.id == toDto.id
+        privateMessageDto.to.username == toDto.username
+        privateMessageDto.timestamp == privateMessage.timestamp
+        privateMessageDto.content == privateMessage.content
+    }
+
 }

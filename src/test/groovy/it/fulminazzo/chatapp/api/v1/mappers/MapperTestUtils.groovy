@@ -1,6 +1,7 @@
 package it.fulminazzo.chatapp.api.v1.mappers
 
 import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateChatDto
+import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateMessageDto
 import it.fulminazzo.chatapp.api.v1.domain.dto.UserDto
 import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateChat
 import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateMessage
@@ -63,6 +64,10 @@ final class MapperTestUtils {
 
     static PrivateChatDto privateChatDto(UserDto firstUserDto, UserDto secondUserDto) {
         return new PrivateChatDto(UUID.randomUUID(), firstUserDto, secondUserDto)
+    }
+
+    static PrivateMessageDto privateMessageDto(UserDto fromDto, UserDto toDto) {
+        return new PrivateMessageDto(fromDto, toDto, LocalDateTime.now(), 'Hello, World!')
     }
 
 }
