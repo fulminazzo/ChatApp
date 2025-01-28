@@ -12,7 +12,7 @@ public class ErrorController extends AbstractErrorController {
 
     @ExceptionHandler(HttpException.class)
     public ResponseEntity<?> handleException(HttpException ex) {
-        return new ResponseEntity<>(ex.getHttpStatus());
+        return apiError(ex.getHttpStatus(), ex.getMessage());
     }
 
 }
