@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable
 import spock.lang.Specification
 
 class PrivateChatServiceTest extends Specification {
+    private static final User USER = User.builder().id(UUID.randomUUID()).username('fulminazzo').build()
+
     private PrivateChatRepository chatRepository
     private UserService userService
     private PrivateChatService chatService
@@ -57,9 +59,32 @@ class PrivateChatServiceTest extends Specification {
         actual == expected
     }
 
+    def 'test find one by user'() {
+        given:
+        def chat = PrivateChat.builder().id(UUID.randomUUID())
+                .firstUser(first)
+                .secondUser(second)
+                .build()
+
+        and:
+        userService.findUserByIdOrThrow(USER.id) >> USER
+        chatRepository.findById(chat.id) >> Optional.of(chat)
+
+        when:
+        def privateChatDto = chatService.findOneByUser(USER.id, chat.id)
+
+        then:
+        privateChatDto.id == chat.id
+
+        where:
+        first                                        | second
+        USER                                         | User.builder().id(UUID.randomUUID()).build()
+        User.builder().id(UUID.randomUUID()).build() | USER
+    }
+
     def 'test create private chat with chat already existing should throw exception'() {
         given:
-        User first = User.builder().id(UUID.randomUUID()).username('fulminazzo').build()
+        User first = USER
         User second = User.builder().id(UUID.randomUUID()).username('felix').build()
 
         and:
