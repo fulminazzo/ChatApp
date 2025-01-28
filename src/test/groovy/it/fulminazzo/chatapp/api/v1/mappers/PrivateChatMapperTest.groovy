@@ -1,45 +1,18 @@
 package it.fulminazzo.chatapp.api.v1.mappers
 
-import it.fulminazzo.chatapp.api.v1.domain.dto.PrivateChatDto
-import it.fulminazzo.chatapp.api.v1.domain.dto.UserDto
-import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateChat
-import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateMessage
-import it.fulminazzo.chatapp.api.v1.domain.entities.User
 import spock.lang.Specification
-
-import java.time.LocalDateTime
 
 class PrivateChatMapperTest extends Specification {
 
     def 'test that mapper correctly maps private chat to private chat dto'() {
         given:
-        def firstUser = User.builder()
-                .id(UUID.randomUUID())
-                .username('fulminazzo')
-                .password('password')
-                .build()
+        def firstUser = MapperTestUtils.firstUser()
 
         and:
-        def secondUser = User.builder()
-                .id(UUID.randomUUID())
-                .username('felix')
-                .password('password')
-                .build()
+        def secondUser = MapperTestUtils.secondUser()
 
         and:
-        def privateChat = PrivateChat.builder()
-                .id(UUID.randomUUID())
-                .firstUser(firstUser)
-                .secondUser(secondUser)
-                .messages(Arrays.asList(PrivateMessage.builder()
-                        .id(UUID.randomUUID())
-                        .from(firstUser)
-                        .to(secondUser)
-                        .timestamp(LocalDateTime.now())
-                        .content('Hello, World!')
-                        .build()
-                ))
-                .build()
+        def privateChat = MapperTestUtils.privateChat(firstUser, secondUser)
 
         when:
         def privateChatDto = PrivateChatMapper.INSTANCE.privateChatToPrivateChatDto(privateChat)
@@ -54,13 +27,13 @@ class PrivateChatMapperTest extends Specification {
 
     def 'test that mapper correctly maps private chat dto to private chat'() {
         given:
-        def firstUserDto = new UserDto(UUID.randomUUID(), 'fulminazzo')
+        def firstUserDto = MapperTestUtils.firstUserDto()
 
         and:
-        def secondUserDto = new UserDto(UUID.randomUUID(), 'felix')
+        def secondUserDto = MapperTestUtils.secondUserDto()
 
         and:
-        def privateChatDto = new PrivateChatDto(UUID.randomUUID(), firstUserDto, secondUserDto)
+        def privateChatDto = MapperTestUtils.privateChatDto(firstUserDto, secondUserDto)
 
         when:
         def privateChat = PrivateChatMapper.INSTANCE.privateChatDtoToPrivateChat(privateChatDto)
