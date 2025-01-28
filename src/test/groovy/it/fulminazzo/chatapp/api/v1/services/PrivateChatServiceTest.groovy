@@ -2,6 +2,7 @@ package it.fulminazzo.chatapp.api.v1.services
 
 import it.fulminazzo.chatapp.api.v1.domain.entities.PrivateChat
 import it.fulminazzo.chatapp.api.v1.domain.entities.User
+import it.fulminazzo.chatapp.api.v1.exceptions.HttpException
 import it.fulminazzo.chatapp.api.v1.mappers.PrivateChatMapper
 import it.fulminazzo.chatapp.api.v1.repositories.PrivateChatRepository
 import org.springframework.data.domain.PageImpl
@@ -54,6 +55,31 @@ class PrivateChatServiceTest extends Specification {
 
         then:
         actual == expected
+    }
+
+    def 'test create private chat with chat already existing should throw exception'() {
+        given:
+        User first = User.builder().id(UUID.randomUUID()).username('fulminazzo').build()
+        User second = User.builder().id(UUID.randomUUID()).username('felix').build()
+
+        and:
+        userService.findUserByIdOrThrow(first.id) >> first
+        userService.findUserByUsernameOrThrow(second.username) >> second
+
+        and:
+        chatRepository.findByFirstUserAndSecondUser(first, second) >> chatOfFirst
+        chatRepository.findByFirstUserAndSecondUser(second, first) >> chatOfSecond
+
+        when:
+        chatService.createChat(first.id, second.username)
+
+        then:
+        thrown(HttpException)
+
+        where:
+        chatOfFirst                    | chatOfSecond
+        Optional.of(new PrivateChat()) | Optional.empty()
+        Optional.empty()               | Optional.of(new PrivateChat())
     }
 
 }
