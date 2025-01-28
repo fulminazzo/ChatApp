@@ -1,6 +1,7 @@
 package it.fulminazzo.chatapp.api.v1.security.filters;
 
 import it.fulminazzo.chatapp.api.v1.security.exceptions.InvalidJwtException;
+import it.fulminazzo.chatapp.api.v1.security.objects.ChatUserDetails;
 import it.fulminazzo.chatapp.api.v1.security.services.IAuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,6 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                if (userDetails instanceof ChatUserDetails chatUserDetails)
+                    request.setAttribute("userId", chatUserDetails.getUserId());
             } catch (InvalidJwtException e) {
                 // do nothing, authentication not successful
             }
