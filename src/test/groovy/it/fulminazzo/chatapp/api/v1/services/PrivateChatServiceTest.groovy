@@ -25,26 +25,19 @@ class PrivateChatServiceTest extends Specification {
 
     def 'test find by user'() {
         given:
-        UUID id = UUID.randomUUID()
         Pageable pageable = PageRequest.of(0, 2)
 
         and:
-        def first = User.builder().id(id).build()
+        def user = generateUser()
 
         and:
         def privateChats = [
-                PrivateChat.builder().id(UUID.randomUUID())
-                        .firstUser(first)
-                        .secondUser(User.builder().id(UUID.randomUUID()).build())
-                        .build(),
-                PrivateChat.builder().id(UUID.randomUUID())
-                        .firstUser(User.builder().id(UUID.randomUUID()).build())
-                        .secondUser(first)
-                        .build(),
+                generateChat(user, generateUser()),
+                generateChat(generateUser(), user),
         ]
 
         and:
-        userService.findUserByIdOrThrow(id) >> first
+        userService.findUserByIdOrThrow(user.id) >> user
         chatRepository.findAllByFirstUserOrSecondUser(_ as User, _ as User, _ as Pageable) >> new PageImpl<>(privateChats)
 
         and:
@@ -53,7 +46,7 @@ class PrivateChatServiceTest extends Specification {
         }
 
         when:
-        def actual = chatService.findByUser(id, pageable)
+        def actual = chatService.findByUser(user.id, pageable)
 
         then:
         actual == expected
@@ -61,10 +54,7 @@ class PrivateChatServiceTest extends Specification {
 
     def 'test find one by user'() {
         given:
-        def chat = PrivateChat.builder().id(UUID.randomUUID())
-                .firstUser(first)
-                .secondUser(second)
-                .build()
+        def chat = generateChat(first, second)
 
         and:
         userService.findUserByIdOrThrow(USER.id) >> USER
@@ -77,15 +67,15 @@ class PrivateChatServiceTest extends Specification {
         privateChatDto.id == chat.id
 
         where:
-        first                                        | second
-        USER                                         | User.builder().id(UUID.randomUUID()).build()
-        User.builder().id(UUID.randomUUID()).build() | USER
+        first          | second
+        USER           | generateUser()
+        generateUser() | USER
     }
 
     def 'test create private chat with chat already existing should throw exception'() {
         given:
         User first = USER
-        User second = User.builder().id(UUID.randomUUID()).username('felix').build()
+        User second = generateUser()
 
         and:
         userService.findUserByIdOrThrow(first.id) >> first
@@ -105,6 +95,17 @@ class PrivateChatServiceTest extends Specification {
         chatOfFirst                    | chatOfSecond
         Optional.of(new PrivateChat()) | Optional.empty()
         Optional.empty()               | Optional.of(new PrivateChat())
+    }
+
+    private static PrivateChat generateChat(User first, User second) {
+        return PrivateChat.builder().id(UUID.randomUUID())
+                .firstUser(first)
+                .secondUser(second)
+                .build()
+    }
+
+    private static User generateUser() {
+        return User.builder().id(UUID.randomUUID()).username('felix').password('password').build()
     }
 
 }
