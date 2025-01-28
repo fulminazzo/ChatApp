@@ -31,11 +31,11 @@ class PrivateChatService implements IPrivateChatService {
     }
 
     @Override
-    public PrivateChatDto findOneByUser(UUID userId, UUID chatId) {
+    public PrivateChat findOneByUser(UUID userId, UUID chatId) {
         User user = userService.findUserByIdOrThrow(userId);
         PrivateChat privateChat = findChatByIdOrThrow(chatId);
         if (privateChat.getFirstUser().equals(user) || privateChat.getSecondUser().equals(user))
-            return PrivateChatMapper.INSTANCE.privateChatToPrivateChatDto(privateChat);
+            return privateChat;
         else throw new HttpException(HttpStatus.FORBIDDEN);
     }
 
