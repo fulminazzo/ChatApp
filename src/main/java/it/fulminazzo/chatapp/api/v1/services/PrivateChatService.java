@@ -27,6 +27,7 @@ class PrivateChatService implements IPrivateChatService {
         User user = userService.findUserByIdOrThrow(userId);
         return chatRepository.findAllByFirstUserOrSecondUser(user, user, pageable).stream()
                 .map(PrivateChatMapper.INSTANCE::privateChatToPrivateChatDto)
+                .peek(c -> c.checkUser(userId))
                 .toList();
     }
 
