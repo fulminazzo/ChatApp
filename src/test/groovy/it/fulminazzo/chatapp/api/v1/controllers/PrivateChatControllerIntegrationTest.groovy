@@ -3,11 +3,14 @@ package it.fulminazzo.chatapp.api.v1.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import it.fulminazzo.chatapp.api.v1.domain.entities.User
 import it.fulminazzo.chatapp.api.v1.domain.requests.PrivateChatRequest
+import it.fulminazzo.chatapp.api.v1.exceptions.HttpException
 import it.fulminazzo.chatapp.api.v1.repositories.UserRepository
 import it.fulminazzo.chatapp.api.v1.services.IPrivateChatService
+import jakarta.servlet.ServletException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.annotation.DirtiesContext
@@ -48,7 +51,7 @@ class PrivateChatControllerIntegrationTest extends Specification {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
-    def 'test that create chat works properly'() {
+    def 'test that create chat returns ok'() {
         given:
         def userId = firstUser.id
         def otherUsername = secondUser.username
@@ -71,6 +74,32 @@ class PrivateChatControllerIntegrationTest extends Specification {
                 MockMvcResultMatchers.jsonPath('first.id').value(userId.toString()),
                 MockMvcResultMatchers.jsonPath('second.id').value(secondUser.id.toString()),
         )
+    }
+
+    def 'test that create chat of already existing throws exception'() {
+        given:
+        def userId = firstUser.id
+        def otherUsername = secondUser.username
+
+        and:
+        chatService.createChat(userId, otherUsername)
+
+        and:
+        def json = objectMapper.writeValueAsString(new PrivateChatRequest(otherUsername))
+
+        when:
+        mockMvc.perform(
+                MockMvcRequestBuilders.post('/api/v1/chats')
+                        .requestAttr('userId', userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+
+        then:
+        def e = thrown(ServletException)
+        def actual = e.cause
+        e.cause instanceof HttpException
+        actual.httpStatus == HttpStatus.CONFLICT
     }
 
 }
