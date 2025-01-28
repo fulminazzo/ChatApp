@@ -1,18 +1,12 @@
 package it.fulminazzo.chatapp.api.v1.mappers
 
-import it.fulminazzo.chatapp.api.v1.domain.dto.UserDto
-import it.fulminazzo.chatapp.api.v1.domain.entities.User
 import spock.lang.Specification
 
 class UserMapperTest extends Specification {
 
     def 'test that mapper correctly maps user to user dto'() {
         given:
-        def user = User.builder()
-                .id(UUID.randomUUID())
-                .username('fulminazzo')
-                .password('password')
-                .build()
+        def user = MapperTestUtils.firstUser()
 
         when:
         def userDto = UserMapper.INSTANCE.userToUserDto(user)
@@ -24,7 +18,7 @@ class UserMapperTest extends Specification {
 
     def 'test that mapper correctly maps user dto to user'() {
         given:
-        def userDto = new UserDto(UUID.randomUUID(), 'fulminazzo')
+        def userDto = MapperTestUtils.firstUserDto()
 
         when:
         def user = UserMapper.INSTANCE.userDtoToUser(userDto)
