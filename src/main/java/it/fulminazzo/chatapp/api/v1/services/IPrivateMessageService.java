@@ -10,4 +10,6 @@ public interface IPrivateMessageService {
 
     List<PrivateMessageDto> findByUserAndChat(UUID userId, UUID chatId, Pageable pageable);
 
+    PrivateMessageDto addMessage(UUID userId, PrivateMessageDto messageDto);
+
 }
