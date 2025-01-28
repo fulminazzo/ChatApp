@@ -34,7 +34,7 @@ class AuthControllerIntegrationTest extends Specification {
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
     }
 
-    def 'test that register of valid user returns ok'() {
+    def 'test that register of valid user returns ok and returns token'() {
         given:
         def request = new LoginRequest('fulminazzo1', 'password')
         def json = objectMapper.writeValueAsString(request)
@@ -47,12 +47,14 @@ class AuthControllerIntegrationTest extends Specification {
         )
 
         then:
-        actual.andExpect(
-                MockMvcResultMatchers.status().isOk()
+        actual.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath('expirationInSeconds').isNumber(),
+                MockMvcResultMatchers.jsonPath('token').isString()
         )
     }
 
-    def 'test that login of valid user returns ok'() {
+    def 'test that login of valid user returns ok and returns token'() {
         given:
         def request = new LoginRequest('fulminazzo', 'password')
         def json = objectMapper.writeValueAsString(request)
@@ -65,8 +67,10 @@ class AuthControllerIntegrationTest extends Specification {
         )
 
         then:
-        actual.andExpect(
-                MockMvcResultMatchers.status().isOk()
+        actual.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.jsonPath('expirationInSeconds').isNumber(),
+                MockMvcResultMatchers.jsonPath('token').isString()
         )
     }
 
