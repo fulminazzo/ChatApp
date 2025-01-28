@@ -5,6 +5,8 @@ import it.fulminazzo.chatapp.api.v1.domain.requests.GetPrivateMessageRequest;
 import it.fulminazzo.chatapp.api.v1.services.IPrivateMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,14 @@ public class PrivateMessageController {
             Pageable pageable
     ) {
         return messageService.findByUserAndChat(userId, messageRequest.chatId(), pageable);
+    }
+
+    @PostMapping
+    public ResponseEntity<PrivateMessageDto> createMessage(
+            @RequestAttribute UUID userId,
+            @RequestBody PrivateMessageDto messageDto
+    ) {
+        return new ResponseEntity<>(messageService.addMessage(userId, messageDto), HttpStatus.CREATED);
     }
 
 }
