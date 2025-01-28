@@ -61,7 +61,7 @@ class PrivateChatControllerIntegrationTest extends Specification {
 
         when:
         def response = mockMvc.perform(
-                MockMvcRequestBuilders.post('/api/v1/chats')
+                MockMvcRequestBuilders.post('/api/v1/private/chats')
                         .requestAttr('userId', userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
@@ -89,7 +89,7 @@ class PrivateChatControllerIntegrationTest extends Specification {
 
         when:
         mockMvc.perform(
-                MockMvcRequestBuilders.post('/api/v1/chats')
+                MockMvcRequestBuilders.post('/api/v1/private/chats')
                         .requestAttr('userId', userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
