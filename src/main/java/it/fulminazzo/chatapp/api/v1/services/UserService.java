@@ -20,4 +20,9 @@ class UserService implements IUserService {
         return userRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND));
     }
 
+    @Override
+    public User findUserByUsernameOrThrow(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND));
+    }
+
 }

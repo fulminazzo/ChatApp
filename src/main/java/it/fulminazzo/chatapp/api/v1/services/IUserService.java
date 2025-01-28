@@ -8,4 +8,6 @@ public interface IUserService {
 
     User findUserByIdOrThrow(UUID id);
 
+    User findUserByUsernameOrThrow(String username);
+
 }
